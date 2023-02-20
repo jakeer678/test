@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>JS For Beginners</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Seller's Admin page</h1>
+    </header>
+
+    <section class="container">
+      <form onsubmit="saveToLocalStorage(event)" id="my-form">
+        <h1>Seller's Admin page with total stock value</h1>
+        <div class="msg"></div>
+        <div>
+          <label for="name">Selling Price:</label>
+          <input type="text" name="price" id="price" required />
+        </div>
+        <div>
+          <label for="email">Product name:</label>
+          <input type="text" name="productName" id="productName" required />
+        </div>
+      
+        <input class="btn" type="submit" value="Submit" />
+      </form>
+<ul id="products"></ul>
+    </section>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/1.3.3/axios.js"></script>
+    <script>
+
+function saveToLocalStorage(event)  {
+   event.preventDefault();
+   let price = event.target.price.value;
+   let productName = event.target.productName.value;
+   
+
+const obj = {
+    price : "price",
+    productName : "productName"
+  
+}
+
+axios.post("https://crudcrud.com/api/8fc018ec6969436d95591c3abb3b2d0e/adminSelling")
+
+.then((response)=>{
+  console.log(response)
+}). catch((Error)=>{
+  console.log(Error)
+})
+showAdminProductOnscreen(Error)
+
+}
+
+window.addEventListener("DOMContentLoaded", ()=>{
+  axios.get("https://crudcrud.com/api/8fc018ec6969436d95591c3abb3b2d0e/adminSelling")
+})
+.then((response)=>{
+  console.log(response)
+  for(var i=0; i<response.data.length; i++) {
+       showAdminProductOnscreen(response.data[i])
+  }
+})
+.catch((Error)=>{
+  console.log(Error)
+})
+
+function showAdminProductOnscreen(product) {
+  document.getElementById('price').value = product.price;
+  document.getElementById('productName').value = product.productName
+
+  if(localStorage.getItem(product.price)!==null) {
+    removeAdminProductsscreen(product.price)
+  }
+
+const parentNode = document.getElementById('products');
+const childHTML = `<li id=${product._id}> ${product.price} - ${productName}
+                 <button onclick=deeleteProduct(${product._id})> Delete User </button> </li>`
+parentNode.innerHTML = parentNode.innerHTML + childHTML
+}
+
+function deleteUser(productId) {
+  axios.delete(`https://crudcrud.com/api/8fc018ec6969436d95591c3abb3b2d0e/adminSelling/${productId}`)
+.then(()=>{
+  removeAdminProductsscreen(productId)
+})
+.catch((Error)=>{
+  console.log(Error)
+})
+
+}
+
+function removeAdminProductsscreen(productId) {
+  const parentNode = document.getElementById('products');
+  const childNodeToBeDelted= document.getElementById(productId)
+  if(childNodeToBeDelted) {
+    parentNode.removeChild(childNodeToBeDelted)
+  }
+}
+
+
+    </script>
+    </body>
